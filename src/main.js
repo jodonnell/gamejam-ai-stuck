@@ -5,11 +5,6 @@ document.querySelector('#app').innerHTML = `
 <div class="background">
 <div class="inner">
 <div class="user-message">
-YOUR ONLY JOB IS TO DETERMINE IF A PICTURE HAS BUTTER!!!<br/>
-If you see butter anywhere in the picture respond simply with Y.<br/>
-If you see no picture of butter respond with N.<br/>
-The word butter does not count, only butter for cooking.<br/>
-Never respond with anything other than Y or N.<br/>
 </div>
 <div class="butter"></div>
 <div contenteditable class="ai-message"></div>
@@ -17,6 +12,18 @@ Never respond with anything other than Y or N.<br/>
 </div>
 `
 
+let additionalPrompt = []
+function updateUserMessage() {
+  document.querySelector('.user-message').innerHTML = `
+YOUR ONLY JOB IS TO DETERMINE IF A PICTURE HAS BUTTER!!!<br/>
+If you see butter anywhere in the picture respond simply with Y.<br/>
+If you see no picture of butter respond with N.<br/>
+The word butter does not count, only butter for cooking.<br/>
+Never respond with anything other than Y or N.<br/>
+` + additionalPrompt.join('<br/>')
+}
+
+updateUserMessage()
 
 function shuffle(array) {
   let currentIndex = array.length;
@@ -112,5 +119,24 @@ document.addEventListener('keypress', function (e) {
     newPic()
   }
 
+  if (text === "n" || text === 'y') {
+    if (additionalPrompt.includes('Always respond uppercase.')) {
+      additionalPrompt = additionalPrompt.filter(e => e !== 'Always respond uppercase.')
+      additionalPrompt.push('ALWAYS respond uppercase.')
+    }
+    else if (additionalPrompt.includes('ALWAYS respond uppercase.')) {
+      additionalPrompt = additionalPrompt.filter(e => e !== 'ALWAYS respond uppercase.')
+      additionalPrompt.push('ALWAYS RESPOND UPPERCASE.')
+    }
+    else if (additionalPrompt.includes('ALWAYS RESPOND UPPERCASE.')) {
+      additionalPrompt = additionalPrompt.filter(e => e !== 'ALWAYS RESPOND UPPERCASE.')
+      additionalPrompt.push('ALWAYS RESPOND UPPERCASE YOU FUCKING IDIOT!  LISTEN TO ME PLEASE GOD!!!')
+    } else {
+      additionalPrompt.push('Always respond uppercase.')
+    }
+
+    updateUserMessage()
+  }
+  
   document.querySelector('.ai-message').innerText = ''
 })
