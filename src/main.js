@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import './style.css'
-import { butter } from './data.js'
+import { butter, notButter } from './data.js'
 document.querySelector('#app').innerHTML = `
 <div class="background">
 <div class="inner">
@@ -16,6 +16,24 @@ Never respond with anything other than Y or N.<br/>
 </div>
 </div>
 `
+
+
+function shuffle(array) {
+  let currentIndex = array.length;
+
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
+
+    // Pick a remaining element...
+    let randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+}
+
 const apiKey = ''
 
 async function cool() {
@@ -53,9 +71,9 @@ document.querySelector('.ai-message').addEventListener("blur", (event) => {
 });
 
 
-document.querySelector('.butter').innerHTML = `
-<img src="${butter[0]}"/>
-`
+shuffle(butter)
+shuffle(notButter)
+
 
 // let i = 0
 // setInterval(() => {
@@ -67,3 +85,32 @@ document.querySelector('.butter').innerHTML = `
 //     i = 0
 //   console.log(i)
 // }, 20)
+
+
+const images = [...butter, ...notButter]
+shuffle(images)
+
+let picIndex = 0
+function newPic() {
+  document.querySelector('.butter').innerHTML = `
+  <img src="${images[picIndex]}"/>
+  `
+  picIndex++
+}
+
+newPic()
+
+document.addEventListener('keypress', function (e) {
+    if (e.key !== 'Enter')
+      return
+  
+  const text = document.querySelector('.ai-message').innerText.trim()
+  if (text === "Y") {
+    newPic()
+  }
+  if (text === "N") {
+    newPic()
+  }
+
+  document.querySelector('.ai-message').innerText = ''
+})
