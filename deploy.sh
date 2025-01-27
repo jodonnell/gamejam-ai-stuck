@@ -1,5 +1,5 @@
-git co deploy
-git merge main
+git branch -D deploy
+git co -b deploy
 npm run build
 cp dist/index.html .
 mkdir -p assests
